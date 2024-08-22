@@ -5,6 +5,7 @@ console.log('process.env.NUXT_BASE_URL', process.env.NUXT_BASE_URL);
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
+  css: ['~/assets/css/main.css'],
   imports: {
     dirs: [
       // 扫描顶级模块
@@ -28,7 +29,7 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     "nuxt-svgo"],
   antd: {
-    // Options
+    extractStyle: true,
   },
   svgo: {
     componentPrefix: 'svg', //指定组件前缀
@@ -45,8 +46,18 @@ export default defineNuxtConfig({
         changeOrigin: true,
         prependPath: true,
       },
+      '/db': {
+        target: "http://192.168.2.131:100", // 这里是接口地址
+        changeOrigin: true,
+        prependPath: true,
+      }
     },
   },
   i18n: i18nConfig,
-
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
 })

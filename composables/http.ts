@@ -34,7 +34,7 @@ function fetch<T>(url: UrlType, opts: HttpOption<T>) {
     options.lazy = options.lazy ?? true
 
     const { baseURL } = useRuntimeConfig().public
-    console.log('baseURL', baseURL)
+
     return useFetch<ResOptions<T>>(url, {
         // Request interception
         onRequest({ options }) {
@@ -45,6 +45,9 @@ function fetch<T>(url: UrlType, opts: HttpOption<T>) {
             const locale = $i18n.locale.value
             options.headers = new Headers(options.headers)
             options.headers.set('Content-Language', locale)
+            options.headers.set('Authorization', '...')
+
+            console.log('options', options)
         },
         // Response interception
         onResponse(_context) {
@@ -63,7 +66,7 @@ function fetch<T>(url: UrlType, opts: HttpOption<T>) {
 
 export const useHttp = {
     get: <T>(url: UrlType, params?: SearchParameters, option?: HttpOption<T>) => {
-        console.log('process.env.NUXT_PUBLIC_BASE_URL', process.env);
+        console.log('url', url);
 
         return fetch<T>(url, { method: 'get', params, ...option })
     },

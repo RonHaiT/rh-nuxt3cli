@@ -11,11 +11,16 @@
   },
   "dependencies": {
     "@nuxtjs/i18n": "^8.5.0",
+    "crypto-js": "^4.2.0",
+    "jsencrypt": "^3.3.2",
     "nuxt": "^3.12.4",
     "vue": "latest"
   },
   "devDependencies": {
     "@ant-design-vue/nuxt": "^1.4.2",
-    "nuxt-svgo": "^4.0.3"
+    "autoprefixer": "^10.4.20",
+    "nuxt-svgo": "^4.0.3",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.10"
   }
 }

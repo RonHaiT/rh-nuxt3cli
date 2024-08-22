@@ -1,14 +1,14 @@
-import type { UseFetchOptions } from '#app'
-interface ResOptions<T> {
-    data: T
-    code: number
-    success: boolean
-    detail?: string
-}
-type HttpOption<T> = UseFetchOptions<ResOptions<T>, T, KeysOf<T>>
-import type { KeysOf, PickFrom } from '#app/composables/asyncData'
+// import type { UseFetchOptions } from '#app'
+// interface ResOptions<T> {
+//     data: T
+//     code: number
+//     success: boolean
+//     detail?: string
+// }
+// type HttpOption<T> = UseFetchOptions<ResOptions<T>, T, KeysOf<T>>
+// import type { KeysOf, PickFrom } from '#app/composables/asyncData'
 enum API {
-    userList = '/users',
+    userList = '/user',
 }
 interface UserListParams {
     email: string
