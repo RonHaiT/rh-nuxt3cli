@@ -8,25 +8,25 @@ type UrlType = string | Request | Ref<string | Request> | (() => string | Reques
 type HttpOption<T> = UseFetchOptions<ResOptions<T>, T, KeysOf<T>>
 interface ResOptions<T> {
     data: T
-    code: number
-    success: boolean
-    detail?: string
+    msg: string
+    status: number
 }
 
 function handleError<T>(
     _method: string | undefined,
     _response: FetchResponse<ResOptions<T>> & FetchResponse<ResponseType>,
 ) {
-    // Handle the error
+    const { status, data, msg } = _response._data || {};
+    console.error(`Error in ${_method}: ${msg} (Status: ${status})`);
 }
 
 function checkRef(obj: Record<string, any>) {
     return Object.keys(obj).some(key => isRef(obj[key]))
 }
 
-function fetch<T>(url: UrlType, opts: HttpOption<T>) {
-    // Check the `key` option
+function fetch<T>(url: UrlType, opts: HttpOption<T>): AsyncData<ResOptions<T>, FetchError<ResOptions<T>> | null> {
     const { key, params, watch } = opts
+    // 如果 `params` 或 `watch` 中存在 `ref` 类型，并且 `key` 没有设置，抛出错误
     if (!key && ((params && checkRef(params)) || (watch && checkRef(watch))))
         console.error('\x1B[31m%s\x1B[0m %s', '[useHttp] [error]', 'The `key` option is required when `params` or `watch` has ref properties, please set a unique key for the current request.')
 
@@ -36,11 +36,9 @@ function fetch<T>(url: UrlType, opts: HttpOption<T>) {
     const { baseURL } = useRuntimeConfig().public
 
     return useFetch<ResOptions<T>>(url, {
-        // Request interception
+
         onRequest({ options }) {
-            // Set the base URL
             options.baseURL = baseURL as string
-            // Set the request headers
             const { $i18n } = useNuxtApp()
             const locale = $i18n.locale.value
             options.headers = new Headers(options.headers)
@@ -49,25 +47,21 @@ function fetch<T>(url: UrlType, opts: HttpOption<T>) {
 
             console.log('options', options)
         },
-        // Response interception
         onResponse(_context) {
-            // Handle the response
+
         },
-        // Error interception
         onResponseError({ response, options: { method } }) {
             handleError<T>(method, response)
         },
-        // Set the cache key
         key: key ?? hash(['api-fetch', url, JSON.stringify(options)]),
-        // Merge the options
+
         ...options,
-    }) as AsyncData<PickFrom<T, KeysOf<T>>, FetchError<ResOptions<T>> | null>
+        // PickFrom<T, KeysOf<T>>
+    }) as AsyncData<ResOptions<T>, FetchError<ResOptions<T>> | null>
 }
 
 export const useHttp = {
     get: <T>(url: UrlType, params?: SearchParameters, option?: HttpOption<T>) => {
-        console.log('url', url);
-
         return fetch<T>(url, { method: 'get', params, ...option })
     },
 

@@ -66,10 +66,16 @@ const login = async (values: any) => {
     tokenType: "pwd",
     secret: "bSawDAwZZWGEd1VarEr9S32ZUqe4lweR",
     account: "admin",
-    pwd: rsaEncrypt(formState.password),
+    pwd: rsaEncrypt(formState.password) as string,
     captchaVerification: formState.captchaVerification,
   };
-  await authLogin(params);
+  let res = await authLogin(params);
+  console.log(333, res.data.value.status);
+
+  //   if (res.data > 0) {
+  //     formState.faildTimes = res.data.faildTimes;
+  //   }
+  formState.captchaVerification = null;
 };
 
 const onFinishFailed = (errorInfo: any) => {

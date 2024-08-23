@@ -16,6 +16,12 @@ export default defineNuxtConfig({
       'composables/**'
     ]
   },
+  //自动注册组件
+  components: [
+    { path: '~/components/verifition' },
+    { path: '~/components/verifition/Verify' },
+    '~/components'
+  ],
   runtimeConfig: {
     //  只能在服务器端上访问
     apiSecret: '123',
